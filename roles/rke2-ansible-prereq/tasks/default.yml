@@ -36,4 +36,12 @@
   register: t
   when: ansible_facts.services['nm-cloud-setup.timer'] is defined
 
-#- debug: var=t
+- name: disable firewalld.service
+  service:
+    name: firewalld.service
+    state: stopped
+    enabled: false
+  register: f
+  when: ansible_facts.services['firewalld.service'] is defined
+  #
+#- debug: var=f
