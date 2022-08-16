@@ -1,0 +1,39 @@
+---
+
+- name: Populate service facts
+  service_facts:
+
+# NetworkManager.service:
+#        name: NetworkManager.service
+#        source: systemd
+#        state: running
+#        status: enabled
+
+- block:
+
+  - name: install rke2-canal.conf
+    include_tasks: install_rke2-canal_conf.yml
+
+  when: ansible_facts.services['NetworkManager.service'] is defined and
+        ansible_facts.services['NetworkManager.service'].status is defined and
+        ansible_facts.services['NetworkManager.service'].status == 'enabled'
+
+- name: disable nm-cloud-setup.service 
+  service:
+    name: nm-cloud-setup.service 
+    state: stopped
+    enabled: false
+  register: s
+  when: ansible_facts.services['nm-cloud-setup.service'] is defined
+
+#- debug: var=s
+
+- name: disable nm-cloud-setup.timer
+  service:
+    name: nm-cloud-setup.timer 
+    state: stopped
+    enabled: false
+  register: t
+  when: ansible_facts.services['nm-cloud-setup.timer'] is defined
+
+#- debug: var=t

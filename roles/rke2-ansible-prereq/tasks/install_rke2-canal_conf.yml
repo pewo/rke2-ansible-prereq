@@ -1,0 +1,38 @@
+---
+
+- name: Create /etc/NetworkManager/conf.d if it does not exist
+  file:
+    path: /etc/NetworkManager/conf.d
+    state: directory
+    mode: '0755'
+  register: confdir
+
+- name: Check directory
+  stat:
+    path: /etc/NetworkManager/conf.d
+  register: p
+
+- block:
+
+  - name: install rke2-canal.conf
+    copy: 
+      src: rke2-canal.conf
+      dest: /etc/NetworkManager/conf.d/rke2-canal.conf
+      owner: root
+      group: root
+      mode: '0644'
+    register: canal
+
+#  - debug: var=canal
+
+  - name: restart NetworkManager
+    service:
+      name: NetworkManager
+      state: reloaded
+    register: r
+    when: canal.changed is defined and canal.changed == true and
+          canal.failed is defined and canal.failed == false
+
+#  - debug: var=r
+
+  when: p.stat.isdir is defined and p.stat.isdir

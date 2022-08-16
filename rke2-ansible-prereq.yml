@@ -1,0 +1,7 @@
+---
+
+- hosts: rke2_cluster
+  gather_facts: false
+  roles:
+    - role: rke2-ansible-prereq
+      tags: rke2-ansible-prereq
