@@ -1,0 +1,23 @@
+- name: Add the local group
+  group:
+    name: "{{ groupname }}"
+    local: true
+    gid: "{{ groupgid }}"
+    state: present
+  when: groupname is defined and groupgid is defined
+
+- name: Add the local account 
+  user:
+    name: "{{ username }}"
+    comment: "{{ usercomment }}"
+    uid: "{{ useruid }}"
+  failed_when: false
+  when: username is defined and usercomment is defined and useruid is defined
+
+- name: Set authorized key taken from file
+  ansible.posix.authorized_key:
+    user: "{{ username }}"
+    state: present
+    key: "{{ userpubkey }}"
+  when: username is defined and userpubkey is defined
+

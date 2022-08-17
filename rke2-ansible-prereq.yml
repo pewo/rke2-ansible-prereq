@@ -4,8 +4,8 @@
   gather_facts: false
   become: yes
   roles:
+    - role: localuser
+      tags: localuser
     - role: rke2-ansible-prereq
       tags: rke2-ansible-prereq
-    - role: peter
-      tags: peter
 
